@@ -13,8 +13,8 @@ def main():
     print("Welcome to email viewer!")
     print("Here, you can view all of your email in a convient terminal interface.")
     print("Press CTRL+D or CTRL+C to exit the program")
-    url, username, password = get_credentials()
-    imap = connect(url)
+    url, port, username, password = get_credentials()
+    imap = connect(url, port)
     with imap:
         login(imap, username, password)
         status, folders = imap.list()
@@ -54,6 +54,20 @@ def get_credentials():
     if not url:
         url = input("Enter IMAP URL: ")
 
+    port = os.getenv("PORT", None)
+    while not port:
+        port = None
+        port_input = input("Enter IMAP PORT (default=993): ")
+        if port_input == "":
+            port = 993
+        else:
+            try:
+                port = int(port_input)
+            except ValueError:
+                print(f"{port_input} is not an integer")
+        if port is not None and (port < 0 or port > 65535):
+            print(f"{port} is not a valid port")
+            port = None
     username = os.getenv("USERNAME", None)
     if not username:
         username = input("Enter username: ")
@@ -62,14 +76,14 @@ def get_credentials():
     if not password:
         password = getpass(
             "Enter password (password will not be shown on screen): ")
-    return url, username, password
+    return url, port, username, password
 
 
-def connect(url):
+def connect(url, port):
     imap = None
     while imap is None:
         try:
-            imap = imaplib.IMAP4_SSL(url)
+            imap = imaplib.IMAP4_SSL(url, port=port)
             return imap
         except socket.gaierror:
             print(f"Unable to connect to server. Is {url} the correct URL?")
