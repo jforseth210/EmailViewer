@@ -81,9 +81,9 @@ def get_credentials():
     """
     Retrieve credentials from environment variables or by prompting the user
 
-    NOTE: The environment variable names aren't great in that they're likely to 
-    have name collisoons with other programs, but since this is mainly inteded to
-    work with dotenv, that shouldn't be a problem.
+    NOTE: The environment variable names aren't great in that they're likely to
+    have name collisoons with other programs, but since this is mainly inteded
+    to work with dotenv, that shouldn't be a problem.
     """
 
     # Get url
@@ -147,7 +147,7 @@ def connect(url, port):
 
 def login(imap, username, password):
     """
-    Try to login into the imap server. 
+    Try to login into the imap server.
     If login fails, reprompt the user.
     Continue prompting until login is successful or the program is exited.
     """
