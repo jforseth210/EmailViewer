@@ -3,27 +3,20 @@ import imaplib
 import email
 from email import policy
 import os
+import socket
 import dotenv
 import html2text
 dotenv.load_dotenv()
 
-url = os.getenv("URL", None)
-if not url:
-    url = input("Enter IMAP URL: ")
-
-username = os.getenv("USERNAME", None)
-if not username:
-    username = input("Enter username: ")
-
-password = os.getenv("PASSWORD", None)
-if not password:
-    password = getpass(
-        "Enter password (password will not be shown on screen): ")
-
 
 def main():
-    with imaplib.IMAP4_SSL(url) as imap:
-        imap.login(username, password)
+    print("Welcome to email viewer!")
+    print("Here, you can view all of your email in a convient terminal interface.")
+    print("Press CTRL+D or CTRL+C to exit the program")
+    url, username, password = get_credentials()
+    imap = connect(url)
+    with imap:
+        login(imap, username, password)
         status, folders = imap.list()
         folders = parse_folders(folders)
         while True:
@@ -44,13 +37,55 @@ def main():
             # Clear the screen
             # https://stackoverflow.com/questions/517970/how-can-i-clear-the-interpreter-console
             print("\033[H\033[J", end="")
+
             if selected_message_body.get_content_type() == 'text/html':
+                # Attempt to handle HTML only emails somewhat gracefully
                 text_maker = html2text.HTML2Text()
                 text_maker.ignore_anchors = False
                 text_maker.ignore_tables = True
                 print(text_maker.handle(selected_message_body.get_content()))
             else:
                 print(selected_message_body.get_content())
+
+
+def get_credentials():
+
+    url = os.getenv("URL", None)
+    if not url:
+        url = input("Enter IMAP URL: ")
+
+    username = os.getenv("USERNAME", None)
+    if not username:
+        username = input("Enter username: ")
+
+    password = os.getenv("PASSWORD", None)
+    if not password:
+        password = getpass(
+            "Enter password (password will not be shown on screen): ")
+    return url, username, password
+
+
+def connect(url):
+    imap = None
+    while imap is None:
+        try:
+            imap = imaplib.IMAP4_SSL(url)
+            return imap
+        except socket.gaierror:
+            print(f"Unable to connect to server. Is {url} the correct URL?")
+            url = input("Enter IMAP URL: ")
+
+
+def login(imap, username, password):
+    while True:
+        try:
+            imap.login(username, password)
+            return
+        except imaplib.IMAP4.error:
+            print("Login failed, please try again:")
+            username = input("Enter username: ")
+            password = getpass(
+                "Enter password (password will not be shown on screen): ")
 
 
 def get_messages_from_folder(imap, folder):
@@ -133,6 +168,6 @@ def select_folder(folders):
 if __name__ == "__main__":
     try:
         main()
-    except (EOFError, KeyboardInterrupt):
+    except (EOFError, KeyboardInterrupt, imaplib.IMAP4.abort):
         print()
         print("Goodbye!")
