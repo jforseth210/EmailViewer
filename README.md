@@ -19,7 +19,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-This program uses IMAP over SSL on port 993, which is supported by most email providers.
+This program uses IMAP over SSL, which is supported by most email providers.
 Check with your provider for exact login details. 
 
 You can also store your credentials in a `.env` file if you don't want to be prompted every time.
@@ -29,6 +29,7 @@ Simply create a file named .env and add your credentials as follows:
 URL=imap.example.com
 USERNAME=you@example.com
 PASSWORD=averysecurepassword
+PORT=993
 ```
 
 Once logged in, you'll be presented with a list of your email folders.
