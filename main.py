@@ -139,9 +139,9 @@ def connect(url, port):
     while imap is None:
         try:
             # Try to connect
-            imap = imaplib.IMAP4_SSL(url, port=port)
+            imap = imaplib.IMAP4_SSL(url, port=port, timeout=10)
             return imap
-        except socket.gaierror:
+        except (socket.gaierror, TimeoutError):
             print(f"Unable to connect to server. Is {url} the correct URL?")
             url = input("Enter IMAP URL: ")
 
