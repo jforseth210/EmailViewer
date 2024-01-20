@@ -47,7 +47,8 @@ def main():
             # Read the messages in the folder
             print("Loading messages...")
             messages = get_messages_from_folder(imap, selected_folder)
-
+            if len(messages) == 0:
+                continue
             print()
             print(f"Emails in {selected_folder}:")
             print()
