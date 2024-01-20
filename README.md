@@ -19,7 +19,10 @@ pip install -r requirements.txt
 python main.py
 ```
 
-This program uses IMAP over SSL, which is supported by most email providers.
+This program uses IMAP over SSL, which is supported by most email providers. 
+It does not support Gmail since they disabled "less secure apps"
+[https://support.google.com/accounts/answer/6010255?hl=en](https://support.google.com/accounts/answer/6010255?hl=en).
+
 Check with your provider for exact login details. 
 
 You can also store your credentials in a `.env` file if you don't want to be prompted every time.
