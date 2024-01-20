@@ -218,7 +218,7 @@ def select_message(messages):
             continue
 
         # Make sure the index is valid
-        if selected_message_input < 0 or selected_message_index >= len(messages):
+        if selected_message_index < 0 or selected_message_index >= len(messages):
             print(f"{selected_message_input} is not a message number")
             continue
 
