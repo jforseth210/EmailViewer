@@ -30,6 +30,9 @@ def main():
     # Use a context manager to ensure the connection is closed
     with imap:
         # Log into the server
+
+        # This doesn't work with Google, but I'm not
+        # learning OAuth in two days
         login(imap, username, password)
         # List folders
         status, folders = imap.list()
