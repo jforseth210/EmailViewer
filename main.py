@@ -311,7 +311,7 @@ def select_folder(folders):
 if __name__ == "__main__":
     try:
         main()
-    except (EOFError, KeyboardInterrupt, imaplib.IMAP4.abort):
+    except (EOFError, KeyboardInterrupt):
         # Handle close
         print()
         print("Goodbye!")
